@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Board Game!</title>
+
+    <script src="Scripts/jaws.js"></script>
+    <script src="Scripts/Interfaces/2d.js"></script>
+    <script src="Scripts/Interfaces/GameLayer.js"></script>
+    <script src="Scripts/Classes/Player.js"></script>
+    <script src="Scripts/Classes/Starfield.js"></script>
+    <script src="Scripts/Game.js"></script>
+    <script src="Scripts/app.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        // Create a canvas
+        var canvas = document.createElement("canvas");
+        // liquid layout: stretch to fill
+        canvas.width = window.innerWidth-50;
+        canvas.height = window.innerHeight-50;
+        // the id the game engine looks for
+        canvas.id = 'canvas';
+        // add the canvas element to the html document
+        document.body.appendChild(canvas);
+    </script>
+
+    <!-- fps and debug information goes here -->
+    <span id='info'></span>
+
+    
+</body>
+</html>
