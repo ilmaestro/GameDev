@@ -5,8 +5,7 @@ module Engine.Component {
     // Class
     export class Container extends ComponentObject {
         constructor(public components: ComponentObject[]) {
-            super(0, 0, 0, 0, 0, 0, 1); //init base
-
+            super(); //init base
         }
 
         update(): void {

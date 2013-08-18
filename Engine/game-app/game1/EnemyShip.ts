@@ -3,14 +3,6 @@
 
 // Module
 module game1 {
-    var EnemyShipSpriteKey: string = "EnemyShip";
-    var EnemyShipSpriteData: Engine.Component.ISpriteData = {
-        sx: 37,
-        sy: 0,
-        w: 42,
-        h: 43,
-        frame: 1
-    };
     // Class
     export class EnemyShip extends Engine.Component.Sprite {
         private reloadSpeed = 5;
@@ -21,10 +13,13 @@ module game1 {
         private t = 0;
         
         // Constructor
-        constructor(public x: number, public y: number) {
-            super(EnemyShipSpriteKey, x, y, EnemyShipSpriteData.w, EnemyShipSpriteData.h, 0, 0, 1);
-            this.spriteKey = EnemyShipSpriteKey;
-            
+        constructor(spriteKey: string, x: number, y: number, w: number, h: number) {
+            super();
+            this.spriteKey = spriteKey;
+            this.x = x;
+            this.y = y;
+            this.width = w;
+            this.height = h;
         }
 
         update() {
@@ -47,13 +42,6 @@ module game1 {
         render(): void { //frame: number
             var frame: number = 0;
             this.spriteSet.render(this.game.context, this.spriteKey, this.x, this.y, frame);
-        }
-
-        get EnemyShipSpriteKey(): string {
-            return EnemyShipSpriteKey;
-        }
-        get EnemyShipSpriteData(): Engine.Component.ISpriteData {
-            return EnemyShipSpriteData;
         }
     }
 

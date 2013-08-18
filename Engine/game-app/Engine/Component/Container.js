@@ -13,7 +13,7 @@ var Engine;
         var Container = (function (_super) {
             __extends(Container, _super);
             function Container(components) {
-                _super.call(this, 0, 0, 0, 0, 0, 0, 1);
+                _super.call(this);
                 this.components = components;
             }
             Container.prototype.update = function () {

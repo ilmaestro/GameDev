@@ -72,12 +72,20 @@
     <Content Include="game-app\game1\EnemyShips.min.js">
       <DependentUpon>EnemyShips.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="game-app\game1\Level1.ts" />
+    <Content Include="game-app\game1\Level1.js">
+      <DependentUpon>Level1.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\game1\Level1.min.js">
+      <DependentUpon>Level1.ts</DependentUpon>
+    </Content>
     <Content Include="game-app\game1\MainScene.js">
       <DependentUpon>MainScene.ts</DependentUpon>
     </Content>
     <Content Include="game-app\game1\MainScene.min.js">
       <DependentUpon>MainScene.ts</DependentUpon>
     </Content>
+    <Content Include="game-media\sprites.png" />
     <Content Include="index.html" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
@@ -147,9 +155,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="game-media\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

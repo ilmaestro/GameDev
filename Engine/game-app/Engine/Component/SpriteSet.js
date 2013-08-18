@@ -8,7 +8,7 @@ var Engine;
             //public name: string, public frameWidth: number, public frameHeight: number, public frames: number
             function SpriteSet(src) {
                 this.src = src;
-                this.spriteMap = [];
+                this.spriteMap = {};
             }
             SpriteSet.prototype.load = function (callback) {
                 this.image = new Image();

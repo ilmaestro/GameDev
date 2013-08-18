@@ -4,14 +4,14 @@ var Engine;
     // Module
     (function (Component) {
         var ComponentObject = (function () {
-            function ComponentObject(x, y, width, height, rotation, zIndex, opacity) {
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-                this.rotation = rotation;
-                this.zIndex = zIndex;
-                this.opacity = opacity;
+            function ComponentObject() {
+                this.x = 0;
+                this.y = 0;
+                this.width = 0;
+                this.height = 0;
+                this.rotation = 0;
+                this.zIndex = 0;
+                this.opacity = 1;
                 this.parent = null;
             }
             ComponentObject.prototype.update = function () {

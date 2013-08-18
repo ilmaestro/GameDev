@@ -4,12 +4,13 @@
 module Engine.Component {
     // Class
     export class Sprite extends ComponentObject {
-        container: Container;
-        spriteSet: SpriteSet;
+        public container: Container;
+        public spriteSet: SpriteSet;
+        public spriteKey: string;
 
         // Constructor
-        constructor(public spriteKey: string, public x: number, public y: number, public width: number, public height: number, public rotation: number, public zIndex: number, public opacity: number) {
-            super(x, y, width, height, rotation, zIndex, opacity);
+        constructor() {
+            super();
         }
 
         update(): void { }

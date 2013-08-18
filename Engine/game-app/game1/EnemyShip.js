@@ -9,30 +9,23 @@ var __extends = this.__extends || function (d, b) {
 // Module
 var game1;
 (function (game1) {
-    var EnemyShipSpriteKey = "EnemyShip";
-    var EnemyShipSpriteData = {
-        sx: 37,
-        sy: 0,
-        w: 42,
-        h: 43,
-        frame: 1
-    };
-
     // Class
     var EnemyShip = (function (_super) {
         __extends(EnemyShip, _super);
         // Constructor
-        function EnemyShip(x, y) {
-            _super.call(this, EnemyShipSpriteKey, x, y, EnemyShipSpriteData.w, EnemyShipSpriteData.h, 0, 0, 1);
-            this.x = x;
-            this.y = y;
+        function EnemyShip(spriteKey, x, y, w, h) {
+            _super.call(this);
             this.reloadSpeed = 5;
             this.xParams = { A: 0, B: 1, C: 1, D: 0 };
             this.yParams = { A: 0, B: 1, C: 5, D: 0 };
             this.vx = 0;
             this.vy = 0;
             this.t = 0;
-            this.spriteKey = EnemyShipSpriteKey;
+            this.spriteKey = spriteKey;
+            this.x = x;
+            this.y = y;
+            this.width = w;
+            this.height = h;
         }
         EnemyShip.prototype.update = function () {
             var mx = this.xParams;
@@ -55,21 +48,6 @@ var game1;
             var frame = 0;
             this.spriteSet.render(this.game.context, this.spriteKey, this.x, this.y, frame);
         };
-
-        Object.defineProperty(EnemyShip.prototype, "EnemyShipSpriteKey", {
-            get: function () {
-                return EnemyShipSpriteKey;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnemyShip.prototype, "EnemyShipSpriteData", {
-            get: function () {
-                return EnemyShipSpriteData;
-            },
-            enumerable: true,
-            configurable: true
-        });
         return EnemyShip;
     })(Engine.Component.Sprite);
     game1.EnemyShip = EnemyShip;

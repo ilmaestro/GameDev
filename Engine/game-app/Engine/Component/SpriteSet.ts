@@ -1,6 +1,9 @@
 
 // Module
 module Engine.Component {
+    export interface ISpriteMap {
+        [key: string] : ISpriteData;
+    }
     export interface ISpriteData {
         sx: number;
         sy: number;
@@ -11,7 +14,7 @@ module Engine.Component {
 
     // Class
     export class SpriteSet {
-        spriteMap:ISpriteData[] = [];
+        spriteMap: ISpriteMap = {};
         image: HTMLImageElement;
 
         // Constructor
