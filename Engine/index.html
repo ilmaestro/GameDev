@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Game Engine Testing</title>
+    <script src="Scripts/jquery-2.0.3.min.js"></script>
+    <script src="game-app/Engine/Component/Component.js"></script>
+    <script src="game-app/Engine/Component/Container.js"></script>
+    <script src="game-app/Engine/Component/Scene.js"></script>
+    <script src="game-app/Engine/Component/Sprite.js"></script>
+    <script src="game-app/Engine/Component/SpriteSet.js"></script>
+    <script src="game-app/Engine/Game.js"></script>
+
+    <script src="game-app/game1/EnemyShip.js"></script>
+    <script src="game-app/game1/EnemyShips.js"></script>
+    <script src="game-app/game1/MainScene.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        // Create a canvas
+        var canvas = document.createElement("canvas");
+        // liquid layout: stretch to fill
+        canvas.width = window.innerWidth - 50;
+        canvas.height = window.innerHeight - 50;
+        // the id the game engine looks for
+        canvas.id = 'canvas';
+        // add the canvas element to the html document
+        document.body.appendChild(canvas);
+
+        // shim layer with setTimeout fallback
+        window.requestAnimFrame = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+    </script>
+    <script src="game-app/main.js"></script>
+</body>
+</html>

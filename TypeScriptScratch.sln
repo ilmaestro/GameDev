@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame", "BoardGame\Boar
 EndProject
 Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "RubbaRabbit", "Ludus-master\example-games\RubbaRabbit\RubbaRabbit.jsproj", "{A7A4512A-1C57-47B1-AD07-147F34959733}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,16 @@ Global
 		{A7A4512A-1C57-47B1-AD07-147F34959733}.Release|x86.ActiveCfg = Release|x86
 		{A7A4512A-1C57-47B1-AD07-147F34959733}.Release|x86.Build.0 = Release|x86
 		{A7A4512A-1C57-47B1-AD07-147F34959733}.Release|x86.Deploy.0 = Release|x86
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DDA5D34-26B8-4AE6-BC60-8CFF1F3F90D7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
