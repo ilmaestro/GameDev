@@ -1,6 +1,7 @@
 var Engine;
 (function (Engine) {
-    /// <reference path="SpriteManager.ts" />
+    /// <reference path="../GameController.ts" />
+    /// <reference path="SpriteRenderer.ts" />
     /// <reference path="Sprite.ts" />
     // Module
     (function (Graphics) {
@@ -33,11 +34,11 @@ var Engine;
                 }
             };
 
-            SpriteCollection.prototype.drawAll = function (spriteManager) {
+            SpriteCollection.prototype.drawAll = function (spriteRenderer) {
                 var i = 0, max = this.sprites.length;
 
                 for (; i < max; i++) {
-                    this.sprites[i].draw(spriteManager);
+                    this.sprites[i].draw(spriteRenderer);
                 }
             };
             return SpriteCollection;

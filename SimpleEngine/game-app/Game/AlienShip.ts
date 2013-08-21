@@ -1,21 +1,25 @@
+/// <reference path="../Engine/GameController.ts" />
+/// <reference path="../Engine/Graphics/SpriteRenderer.ts" />
 /// <reference path="../Engine/Graphics/Sprite.ts" />
 module Game {
 
     // Class
     export class AlientShip extends Engine.Graphics.Sprite {
         // Constructor
-        constructor(textureName: string, x: number, y: number, public width: number, public height: number) {
-            super(textureName, x, y, width, height);
+        constructor(name: string,x: number, y: number, public width: number, public height: number) {
+            super(name, x, y, width, height);
         }
 
-        update(game) {
+        update(gc: Engine.GameController) {
+            gc.logger("updating Alien Ship");
             this.position.x += 1 / 1000.0;
-            super.update(game);
+            super.update(gc);
         }
 
-        draw(spriteManager): void {
-
-            super.draw(spriteManager);
+        draw(spriteRenderer: Engine.Graphics.SpriteRenderer): void {
+            //spriteRenderer.context.fillStyle = "#000";
+            //spriteRenderer.context.fillRect(this.rectangle.x, this.rectangle.y, this.rectangle.width, this.rectangle.height);
+            super.draw(spriteRenderer);
         }
     }
 

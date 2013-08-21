@@ -59,14 +59,28 @@
   <ItemGroup>
     <TypeScriptCompile Include="game-app\Engine\Graphics\Sprite.ts" />
     <TypeScriptCompile Include="game-app\Engine\Graphics\Rectangle.ts" />
-    <TypeScriptCompile Include="game-app\Engine\Game.ts" />
-    <Content Include="game-app\Engine\Game.js">
-      <DependentUpon>Game.ts</DependentUpon>
+    <TypeScriptCompile Include="game-app\Engine\ContentManager.ts" />
+    <Content Include="game-app\Engine\ContentManager.js">
+      <DependentUpon>ContentManager.ts</DependentUpon>
     </Content>
-    <Content Include="game-app\Engine\Game.min.js">
-      <DependentUpon>Game.ts</DependentUpon>
+    <Content Include="game-app\Engine\ContentManager.min.js">
+      <DependentUpon>ContentManager.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="game-app\Engine\Graphics\Point.ts" />
+    <TypeScriptCompile Include="game-app\Engine\GameController.ts" />
+    <Content Include="game-app\Engine\GameController.js">
+      <DependentUpon>GameController.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\Engine\GameController.min.js">
+      <DependentUpon>GameController.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="game-app\Engine\GameWorld.ts" />
+    <Content Include="game-app\Engine\GameWorld.js">
+      <DependentUpon>GameWorld.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\Engine\GameWorld.min.js">
+      <DependentUpon>GameWorld.ts</DependentUpon>
+    </Content>
     <Content Include="game-app\Engine\Graphics\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
     </Content>
@@ -85,7 +99,7 @@
     <Content Include="game-app\Engine\Graphics\Sprite.min.js">
       <DependentUpon>Sprite.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="game-app\Engine\Graphics\SpriteManager.ts" />
+    <TypeScriptCompile Include="game-app\Engine\Graphics\SpriteRenderer.ts" />
     <TypeScriptCompile Include="game-app\Engine\Graphics\SpriteCollection.ts" />
     <Content Include="game-app\Engine\Graphics\SpriteCollection.js">
       <DependentUpon>SpriteCollection.ts</DependentUpon>
@@ -93,13 +107,20 @@
     <Content Include="game-app\Engine\Graphics\SpriteCollection.min.js">
       <DependentUpon>SpriteCollection.ts</DependentUpon>
     </Content>
-    <Content Include="game-app\Engine\Graphics\SpriteManager.js">
-      <DependentUpon>SpriteManager.ts</DependentUpon>
-    </Content>
-    <Content Include="game-app\Engine\Graphics\SpriteManager.min.js">
-      <DependentUpon>SpriteManager.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="game-app\Engine\Graphics\Texture2d.ts" />
+    <Content Include="game-app\Engine\Graphics\SpriteRenderer.js">
+      <DependentUpon>SpriteRenderer.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\Engine\Graphics\SpriteRenderer.min.js">
+      <DependentUpon>SpriteRenderer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="game-app\Engine\Graphics\SpriteSheet.ts" />
+    <Content Include="game-app\Engine\Graphics\SpriteSheet.js">
+      <DependentUpon>SpriteSheet.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\Engine\Graphics\SpriteSheet.min.js">
+      <DependentUpon>SpriteSheet.ts</DependentUpon>
+    </Content>
     <Content Include="game-app\Engine\Graphics\Texture2d.js">
       <DependentUpon>Texture2d.ts</DependentUpon>
     </Content>
@@ -120,13 +141,27 @@
     <Content Include="game-app\Game\SimpleGame.min.js">
       <DependentUpon>SimpleGame.ts</DependentUpon>
     </Content>
+    <Content Include="game-app\jquery.d.ts" />
+    <TypeScriptCompile Include="game-app\main.ts" />
+    <Content Include="game-app\main.js">
+      <DependentUpon>main.ts</DependentUpon>
+    </Content>
+    <Content Include="game-app\main.min.js">
+      <DependentUpon>main.ts</DependentUpon>
+    </Content>
     <Content Include="game-media\sprites.png" />
+    <Content Include="index.html" />
+    <Content Include="packages.config" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

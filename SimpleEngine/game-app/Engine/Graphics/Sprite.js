@@ -3,18 +3,19 @@ var Engine;
     // Module
     (function (Graphics) {
         var Sprite = (function () {
-            function Sprite(textureName, x, y, width, height) {
+            function Sprite(name, x, y, width, height) {
+                this.name = name;
                 this.width = width;
                 this.height = height;
-                this.texture = new Graphics.Texture2d(textureName, new HTMLImageElement());
                 this.rectangle = new Graphics.Rectangle(x, y, this.width, this.height);
                 this.isAlive = true;
             }
-            Sprite.prototype.draw = function (spriteManager) {
+            Sprite.prototype.draw = function (spriteRenderer) {
                 if (this.isAlive) {
                     //TODO: need a way to pass in the source Bounds, in case the image source is a sprite sheet.
                     //TODO: frames support?
-                    spriteManager.draw(this.texture, this.position, this.rectangle, this.rectangle);
+                    //spriteRenderer.draw(this.texture, this.position, this.rectangle, this.rectangle);
+                    spriteRenderer.draw(this.name, 1, this.position);
                 }
             };
 

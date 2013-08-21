@@ -1,4 +1,5 @@
-/// <reference path="SpriteManager.ts" />
+/// <reference path="../GameController.ts" />
+/// <reference path="SpriteRenderer.ts" />
 /// <reference path="Sprite.ts" />
 // Module
 module Engine.Graphics {
@@ -23,7 +24,7 @@ module Engine.Graphics {
             }
         }
 
-        updateAll(game: Engine.Game) {
+        updateAll(game: Engine.GameController) {
             var i = 0,
                 max = this.sprites.length;
 
@@ -37,12 +38,12 @@ module Engine.Graphics {
             }
         }
 
-        drawAll(spriteManager: SpriteManager) {
+        drawAll(spriteRenderer: SpriteRenderer) {
             var i = 0,
                 max = this.sprites.length;
 
             for (; i < max; i++) {
-                this.sprites[i].draw(spriteManager);
+                this.sprites[i].draw(spriteRenderer);
             }
         }
     }
