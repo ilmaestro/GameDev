@@ -6,7 +6,7 @@ class logger {
         this.element = document.createElement("textarea");
         this.element.name = "logger";
         this.element.id = "logger";
-        this.element.style.cssText = "position: relative; width: 350px; height: 200px;";
+        this.element.style.cssText = "float: right; width: 250px; height: 400px; margin-top: 20px; margin-right: 20px;";
         parent.appendChild(this.element);  
     }
 

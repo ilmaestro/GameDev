@@ -32,13 +32,14 @@ class board extends DivElement {
 
     constructor(parent: HTMLElement, log: HTMLElement) {
         super();
-        this.logger = new logger(log);
+        
         this.tiles = [];
         this.walls = [];
         this.alphabet = Utils.GetAtoZ();
         this.element.id = "board";
         this.element.className = "board";
         this.appendTo(parent);
+        this.logger = new logger(this.element);
 
         this.setup();
         this.update();
@@ -46,14 +47,11 @@ class board extends DivElement {
     }
 
     sizeToView() {
-        var view: ISize = Utils.GetViewportSize()
-            , top = this.boardPaddingY, left = this.boardPaddingX
-            , w = view.width - (this.boardPaddingX * 2)
-            , h = view.height - (this.boardPaddingY * 2);
+        var view: ISize = Utils.GetViewportSize();
 
         this.boardSize = {
-            width: (view.width - 100 - (this.boardPaddingX * 2)),
-            height: (view.height - 300 - (this.boardPaddingY * 2))
+            width: (view.width - (this.boardPaddingX * 4)),
+            height: (view.height - 100 - (this.boardPaddingY * 4))
         };
 
         var tileHeight = ((this.boardSize.height - (this.boardPaddingY * 2)) / this.gridRows) - this.tileSpacing
