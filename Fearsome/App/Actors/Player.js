@@ -12,6 +12,8 @@ var Player = (function (_super) {
     __extends(Player, _super);
     function Player(x, y, width, height, newId, color) {
         _super.call(this);
+        this.moveCounter = 0;
+        this.moveType = 4;
         this.location = { x: x, y: y };
         this.rotation = 0;
         this.size = { width: width, height: height };
@@ -21,38 +23,43 @@ var Player = (function (_super) {
         this.color = color || "#444";
         this.element.id = this.id;
         this.element.className = "player";
+
+        this.moveCounter += this.moveType;
         this.update();
     }
-    Player.prototype.playerMoved = function (keyCode) {
+    Player.prototype.flip = function () {
+        this.moveCounter += this.moveType;
+    };
+
+    Player.prototype.move = function (direction) {
         var playerGrid = this.currentTile.gridID, playerGridRev = this.currentTile.gridRevID, nextTile = null;
 
-        switch (keyCode) {
-            case Constants.KeyCode.Left:
-                nextTile = this.board.getTile(playerGrid.column - 1, playerGrid.row);
-                break;
-            case Constants.KeyCode.Up:
-                nextTile = this.board.getTile(playerGrid.column, playerGrid.row - 1);
-                break;
-            case Constants.KeyCode.Right:
-                nextTile = this.board.getTile(playerGrid.column + 1, playerGrid.row);
-                break;
-            case Constants.KeyCode.Down:
-                nextTile = this.board.getTile(playerGrid.column, playerGrid.row + 1);
-                break;
-            default:
-                nextTile = this.currentTile;
-                break;
-        }
+        if (this.moveCounter > 0) {
+            switch (direction) {
+                case Constants.Direction.Left:
+                    nextTile = this.board.getTile(playerGrid.column - 1, playerGrid.row);
+                    break;
+                case Constants.Direction.Up:
+                    nextTile = this.board.getTile(playerGrid.column, playerGrid.row - 1);
+                    break;
+                case Constants.Direction.Right:
+                    nextTile = this.board.getTile(playerGrid.column + 1, playerGrid.row);
+                    break;
+                case Constants.Direction.Down:
+                    nextTile = this.board.getTile(playerGrid.column, playerGrid.row + 1);
+                    break;
+                default:
+                    nextTile = this.currentTile;
+                    break;
+            }
 
-        if (!nextTile || nextTile.name == "Outside") {
-            nextTile = this.board.getTile(playerGridRev.column, playerGridRev.row);
+            if (nextTile.isPassable) {
+                this.moveCounter--;
+                this.currentTile = nextTile;
+                this.location = nextTile.location;
+            }
+            this.update();
         }
-
-        if (nextTile.isPassable) {
-            this.currentTile = nextTile;
-            this.location = nextTile.location;
-        }
-        this.update();
     };
 
     Player.prototype.getCssText = function () {
@@ -69,9 +76,9 @@ var Player = (function (_super) {
 
     Player.prototype.update = function () {
         this.setCssText(this.getCssText());
-        if (this.currentTile) {
-            this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
-        }
+        //if (this.currentTile) {
+        //    this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
+        //}
     };
     return Player;
 })(DivElement);

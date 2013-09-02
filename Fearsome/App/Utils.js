@@ -51,5 +51,28 @@ var Utils;
         return AZList;
     }
     Utils.GetAtoZ = GetAtoZ;
+
+    function GetDirectionInDegrees(direction) {
+        var retVal = 0;
+        switch (direction) {
+            case Constants.Direction.Left:
+                retVal = 0;
+                break;
+            case Constants.Direction.Up:
+                retVal = 90;
+                break;
+            case Constants.Direction.Right:
+                retVal = 180;
+                break;
+            case Constants.Direction.Down:
+                retVal = 270;
+                break;
+            default:
+                retVal = 0;
+                break;
+        }
+        return retVal;
+    }
+    Utils.GetDirectionInDegrees = GetDirectionInDegrees;
 })(Utils || (Utils = {}));
 //# sourceMappingURL=Utils.js.map

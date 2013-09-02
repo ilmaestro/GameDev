@@ -59,6 +59,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\file1.ts" />
     <Content Include="index.html" />
+    <Content Include="Scripts\d.ts\underscore\underscore.d.ts" />
     <Content Include="Scripts\file1.js">
       <DependentUpon>file1.ts</DependentUpon>
     </Content>
@@ -81,12 +82,16 @@
     </Content>
     <Content Include="Scripts\typeings\jaws.d.ts" />
     <Content Include="Scripts\typeings\jquery.d.ts" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\underscore.min.map" />
+    <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,4 +1,7 @@
 /// <reference path="../Utils.ts" />
+/// <reference path="../Actors/Player.ts" />
+/// <reference path="../Actors/Monster.ts" />
+/// <reference path="../Actors/MonsterMover.ts" />
 /// <reference path="../Tiles/Tile.ts" />
 /// <reference path="../Tiles/Wall.ts" />
 /// <reference path="../Tiles/DivElement.ts" />
@@ -13,38 +16,114 @@ class board extends DivElement {
 
     walls: Wall[];
     alphabet = [];
+
     idCount = 0;
     player: Player;
+    monster: Monster;
 
     boardPaddingX: number = 10;
     boardPaddingY: number = 10;
 
-    tileOffsetX: number = 30;
-    tileOffsetY: number = 30;
+    tileOffsetX: number = 10;
+    tileOffsetY: number = 10;
 
-    constructor(parent: HTMLElement) {
+    logger: logger;
+    boardSize: ISize;
+
+    constructor(parent: HTMLElement, log: HTMLElement) {
         super();
+        this.logger = new logger(log);
         this.tiles = [];
         this.walls = [];
         this.alphabet = Utils.GetAtoZ();
         this.element.id = "board";
         this.element.className = "board";
+        this.appendTo(parent);
+
+        this.setup();
+        this.update();
+        this.addEvents();
+    }
+
+    sizeToView() {
+        var view: ISize = Utils.GetViewportSize()
+            , top = this.boardPaddingY, left = this.boardPaddingX
+            , w = view.width - (this.boardPaddingX * 2)
+            , h = view.height - (this.boardPaddingY * 2);
+
+        this.boardSize = {
+            width: (view.width - 100 - (this.boardPaddingX * 2)),
+            height: (view.height - 300 - (this.boardPaddingY * 2))
+        };
+
+        var tileHeight = ((this.boardSize.height - (this.boardPaddingY * 2)) / this.gridRows) - this.tileSpacing
+            , tileWidth = ((this.boardSize.width - (this.boardPaddingX * 2)) / this.gridCols) - this.tileSpacing;
+
+        if (tileHeight < tileWidth) {
+            this.tileSize = tileHeight;
+        } else {
+            this.tileSize = tileWidth;
+        }
+    }
+
+    setup(): void {
+        this.sizeToView();
         this.setupTiles(this.gridCols, this.gridRows);
         //this.setupWalls(13);
 
-        var startingPlayerTile = this.tiles[this.tiles.length-1];
+        //player
+        var startingPlayerTile = this.tiles[this.tiles.length - 1];
         this.player = new Player(startingPlayerTile.location.x, startingPlayerTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "yellow");
         this.player.currentTile = startingPlayerTile;
         this.player.board = this;
         this.player.appendTo(this.element);
 
-        this.appendTo(parent);
-        this.update();
+        //monster
+        var startingMonsterTile = this.tiles[0];
+        this.monster = new Monster(startingMonsterTile.location.x, startingMonsterTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "purple");
+        this.monster.currentTile = startingMonsterTile;
+        this.monster.setBoard(this);
+        this.monster.appendTo(this.element);
+    }
+
+    addEvents(): void {
+        //add events
         var self = this;
         Utils.AddEvent(window, "keyup", function (e) {
-            self.player.playerMoved(e.keyCode);
+            if (!self.monster.mover.isMoving()) {
+                switch (e.keyCode) {
+                    case Constants.KeyCode.Left:
+                        self.player.move(Constants.Direction.Left);
+                        break;
+                    case Constants.KeyCode.Up:
+                        self.player.move(Constants.Direction.Up);
+                        break;
+                    case Constants.KeyCode.Right:
+                        self.player.move(Constants.Direction.Right);
+                        break;
+                    case Constants.KeyCode.Down:
+                        self.player.move(Constants.Direction.Down);
+                        break;
+                    case Constants.KeyCode.M:
+                        self.monster.beginMove();
+                        break;
+                }
+            }
+            if (self.player.moveCounter <= 0) {
+                self.monster.beginMove();
+                self.player.flip();
+            }
         });
     }
+
+    playerEaten(): void {
+        var startTile = this.tiles[this.tiles.length - 1];
+        this.player.currentTile = startTile;
+        this.player.location = startTile.location
+        this.update();
+        this.log("player eaten!");
+    }
+
 
     update(): void {
         this.setCssText(this.getCssText());
@@ -88,7 +167,10 @@ class board extends DivElement {
     }
 
     getTile(column: number, row: number): Tile {
-        var tileNum = (row * this.gridCols) + column;
+        var tileNum = -1;
+        if (column >= 0 && column < this.gridCols) {
+            tileNum = (row * this.gridCols) + column;
+        }
         
         return this.tiles[tileNum];
     }
@@ -157,12 +239,18 @@ class board extends DivElement {
     }
 
     getCssText(): string {
-        var view: ISize = Utils.GetViewportSize()
-            , top = this.boardPaddingY, left = this.boardPaddingX
-            , w = view.width - (this.boardPaddingX * 2), h = view.height - (this.boardPaddingY * 2);
+        //var view: ISize = Utils.GetViewportSize()
+        //    , top = this.boardPaddingY, left = this.boardPaddingX
+        //    , w = view.width - (this.boardPaddingX * 2)
+        //    , h = view.height - (this.boardPaddingY * 2);
         
-        var css = "position: absolute; top: " + top + "px; left: " + left + "px; width: " + w + "px; height: " + h + "px; background-color: #efefef;";
+        var css = "position: relative; width: " + this.boardSize.width + "px; height: " + this.boardSize.height + "px; background-color: #efefef;";
+        //var css = "position: absolute; top: " + top + "px; left: " + left + "px; width: " + w + "px; height: " + h + "px; background-color: #efefef;";
 
         return css;
+    }
+
+    log(message: string) {
+        this.logger.log(message);
     }
 }

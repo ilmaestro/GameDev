@@ -12,7 +12,10 @@ class Tile extends DivElement implements ITile {
 
     constructor(x: number, y: number, width: number, height: number, newId: string, color?: string, isPassable?: boolean) {
         super();
-        this.location = { x: x, y: y };
+        this.location = {
+            x: x,
+            y: y
+        };
         this.size = { width: width, height: height };
         this.name = "Tile";
         this.id = newId;

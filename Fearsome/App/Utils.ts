@@ -52,4 +52,26 @@ module Utils {
 
         return AZList;
     }
+
+    export function GetDirectionInDegrees(direction: Constants.Direction): number {
+        var retVal: number = 0;
+        switch (direction) {
+            case Constants.Direction.Left:
+                retVal = 0;
+                break;
+            case Constants.Direction.Up:
+                retVal = 90;
+                break;
+            case Constants.Direction.Right:
+                retVal = 180;
+                break;
+            case Constants.Direction.Down:
+                retVal = 270;
+                break;
+            default:
+                retVal = 0;
+                break;
+        }
+        return retVal;
+    }
 }

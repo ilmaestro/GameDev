@@ -1,4 +1,7 @@
 /// <reference path="../Utils.ts" />
+/// <reference path="../Actors/Player.ts" />
+/// <reference path="../Actors/Monster.ts" />
+/// <reference path="../Actors/MonsterMover.ts" />
 /// <reference path="../Tiles/Tile.ts" />
 /// <reference path="../Tiles/Wall.ts" />
 /// <reference path="../Tiles/DivElement.ts" />
@@ -10,7 +13,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var board = (function (_super) {
     __extends(board, _super);
-    function board(parent) {
+    function board(parent, log) {
         _super.call(this);
         this.tileSize = 75;
         this.tileSpacing = 1;
@@ -21,29 +24,95 @@ var board = (function (_super) {
         this.idCount = 0;
         this.boardPaddingX = 10;
         this.boardPaddingY = 10;
-        this.tileOffsetX = 30;
-        this.tileOffsetY = 30;
+        this.tileOffsetX = 10;
+        this.tileOffsetY = 10;
+        this.logger = new logger(log);
         this.tiles = [];
         this.walls = [];
         this.alphabet = Utils.GetAtoZ();
         this.element.id = "board";
         this.element.className = "board";
+        this.appendTo(parent);
+
+        this.setup();
+        this.update();
+        this.addEvents();
+    }
+    board.prototype.sizeToView = function () {
+        var view = Utils.GetViewportSize(), top = this.boardPaddingY, left = this.boardPaddingX, w = view.width - (this.boardPaddingX * 2), h = view.height - (this.boardPaddingY * 2);
+
+        this.boardSize = {
+            width: (view.width - 100 - (this.boardPaddingX * 2)),
+            height: (view.height - 300 - (this.boardPaddingY * 2))
+        };
+
+        var tileHeight = ((this.boardSize.height - (this.boardPaddingY * 2)) / this.gridRows) - this.tileSpacing, tileWidth = ((this.boardSize.width - (this.boardPaddingX * 2)) / this.gridCols) - this.tileSpacing;
+
+        if (tileHeight < tileWidth) {
+            this.tileSize = tileHeight;
+        } else {
+            this.tileSize = tileWidth;
+        }
+    };
+
+    board.prototype.setup = function () {
+        this.sizeToView();
         this.setupTiles(this.gridCols, this.gridRows);
 
         //this.setupWalls(13);
+        //player
         var startingPlayerTile = this.tiles[this.tiles.length - 1];
         this.player = new Player(startingPlayerTile.location.x, startingPlayerTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "yellow");
         this.player.currentTile = startingPlayerTile;
         this.player.board = this;
         this.player.appendTo(this.element);
 
-        this.appendTo(parent);
-        this.update();
+        //monster
+        var startingMonsterTile = this.tiles[0];
+        this.monster = new Monster(startingMonsterTile.location.x, startingMonsterTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "purple");
+        this.monster.currentTile = startingMonsterTile;
+        this.monster.setBoard(this);
+        this.monster.appendTo(this.element);
+    };
+
+    board.prototype.addEvents = function () {
+        //add events
         var self = this;
         Utils.AddEvent(window, "keyup", function (e) {
-            self.player.playerMoved(e.keyCode);
+            if (!self.monster.mover.isMoving()) {
+                switch (e.keyCode) {
+                    case Constants.KeyCode.Left:
+                        self.player.move(Constants.Direction.Left);
+                        break;
+                    case Constants.KeyCode.Up:
+                        self.player.move(Constants.Direction.Up);
+                        break;
+                    case Constants.KeyCode.Right:
+                        self.player.move(Constants.Direction.Right);
+                        break;
+                    case Constants.KeyCode.Down:
+                        self.player.move(Constants.Direction.Down);
+                        break;
+                    case Constants.KeyCode.M:
+                        self.monster.beginMove();
+                        break;
+                }
+            }
+            if (self.player.moveCounter <= 0) {
+                self.monster.beginMove();
+                self.player.flip();
+            }
         });
-    }
+    };
+
+    board.prototype.playerEaten = function () {
+        var startTile = this.tiles[this.tiles.length - 1];
+        this.player.currentTile = startTile;
+        this.player.location = startTile.location;
+        this.update();
+        this.log("player eaten!");
+    };
+
     board.prototype.update = function () {
         this.setCssText(this.getCssText());
         this.player.update();
@@ -84,7 +153,10 @@ var board = (function (_super) {
     };
 
     board.prototype.getTile = function (column, row) {
-        var tileNum = (row * this.gridCols) + column;
+        var tileNum = -1;
+        if (column >= 0 && column < this.gridCols) {
+            tileNum = (row * this.gridCols) + column;
+        }
 
         return this.tiles[tileNum];
     };
@@ -142,11 +214,18 @@ var board = (function (_super) {
     };
 
     board.prototype.getCssText = function () {
-        var view = Utils.GetViewportSize(), top = this.boardPaddingY, left = this.boardPaddingX, w = view.width - (this.boardPaddingX * 2), h = view.height - (this.boardPaddingY * 2);
+        //var view: ISize = Utils.GetViewportSize()
+        //    , top = this.boardPaddingY, left = this.boardPaddingX
+        //    , w = view.width - (this.boardPaddingX * 2)
+        //    , h = view.height - (this.boardPaddingY * 2);
+        var css = "position: relative; width: " + this.boardSize.width + "px; height: " + this.boardSize.height + "px; background-color: #efefef;";
 
-        var css = "position: absolute; top: " + top + "px; left: " + left + "px; width: " + w + "px; height: " + h + "px; background-color: #efefef;";
-
+        //var css = "position: absolute; top: " + top + "px; left: " + left + "px; width: " + w + "px; height: " + h + "px; background-color: #efefef;";
         return css;
+    };
+
+    board.prototype.log = function (message) {
+        this.logger.log(message);
     };
     return board;
 })(DivElement);

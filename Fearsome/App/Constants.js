@@ -4,7 +4,7 @@ var Constants;
         Direction[Direction["Left"] = 0] = "Left";
         Direction[Direction["Up"] = 1] = "Up";
         Direction[Direction["Right"] = 2] = "Right";
-        Direction[Direction["Down"] = 0] = "Down";
+        Direction[Direction["Down"] = 3] = "Down";
     })(Constants.Direction || (Constants.Direction = {}));
     var Direction = Constants.Direction;
 
@@ -13,6 +13,7 @@ var Constants;
         KeyCode[KeyCode["Up"] = 38] = "Up";
         KeyCode[KeyCode["Right"] = 39] = "Right";
         KeyCode[KeyCode["Down"] = 40] = "Down";
+        KeyCode[KeyCode["M"] = 77] = "M";
     })(Constants.KeyCode || (Constants.KeyCode = {}));
     var KeyCode = Constants.KeyCode;
 })(Constants || (Constants = {}));

@@ -10,6 +10,8 @@ class Player extends DivElement implements IPlayer {
     color: string;
     currentTile: Tile;
     board: board;
+    moveCounter = 0;
+    moveType = 4;
 
     constructor(x: number, y: number, width: number, height: number, newId: string, color?: string) {
         super();
@@ -22,41 +24,46 @@ class Player extends DivElement implements IPlayer {
         this.color = color || "#444";
         this.element.id = this.id;
         this.element.className = "player";
+
+        this.moveCounter += this.moveType;
         this.update();
     }
 
-    playerMoved(keyCode: Constants.KeyCode): void {
+    flip() {
+        this.moveCounter += this.moveType;
+    }
+
+    move(direction: Constants.Direction): void {
         var playerGrid = this.currentTile.gridID
             , playerGridRev = this.currentTile.gridRevID
-            , nextTile: Tile = null;
+            , nextTile: Tile = null;        
 
-        switch (keyCode) {
-            case Constants.KeyCode.Left: //LEFT
-                nextTile = this.board.getTile(playerGrid.column - 1, playerGrid.row);
-                break;
-            case Constants.KeyCode.Up: //UP
-                nextTile = this.board.getTile(playerGrid.column, playerGrid.row - 1);
-                break;
-            case Constants.KeyCode.Right: //RIGHT
-                nextTile = this.board.getTile(playerGrid.column + 1, playerGrid.row);
-                break;
-            case Constants.KeyCode.Down: //DOWN
-                nextTile = this.board.getTile(playerGrid.column, playerGrid.row + 1);
-                break;
-            default:
-                nextTile = this.currentTile;
-                break;
-        }
+        if (this.moveCounter > 0) {
+            switch (direction) {
+                case Constants.Direction.Left: //LEFT
+                    nextTile = this.board.getTile(playerGrid.column - 1, playerGrid.row);
+                    break;
+                case Constants.Direction.Up: //UP
+                    nextTile = this.board.getTile(playerGrid.column, playerGrid.row - 1);
+                    break;
+                case Constants.Direction.Right: //RIGHT
+                    nextTile = this.board.getTile(playerGrid.column + 1, playerGrid.row);
+                    break;
+                case Constants.Direction.Down: //DOWN
+                    nextTile = this.board.getTile(playerGrid.column, playerGrid.row + 1);
+                    break;
+                default:
+                    nextTile = this.currentTile;
+                    break;
+            }
 
-        if (!nextTile || nextTile.name == "Outside") {
-            nextTile = this.board.getTile(playerGridRev.column, playerGridRev.row);
+            if (nextTile.isPassable) {
+                this.moveCounter--;
+                this.currentTile = nextTile;
+                this.location = nextTile.location;
+            }
+            this.update();
         }
-
-        if (nextTile.isPassable) {
-            this.currentTile = nextTile;
-            this.location = nextTile.location;
-        }
-        this.update();
     }
 
     getCssText(): string {
@@ -73,8 +80,8 @@ class Player extends DivElement implements IPlayer {
 
     update(): void {
         this.setCssText(this.getCssText());
-        if (this.currentTile) {
-            this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
-        }
+        //if (this.currentTile) {
+        //    this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
+        //}
     }
 }

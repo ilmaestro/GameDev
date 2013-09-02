@@ -11,7 +11,10 @@ var Tile = (function (_super) {
     __extends(Tile, _super);
     function Tile(x, y, width, height, newId, color, isPassable) {
         _super.call(this);
-        this.location = { x: x, y: y };
+        this.location = {
+            x: x,
+            y: y
+        };
         this.size = { width: width, height: height };
         this.name = "Tile";
         this.id = newId;
