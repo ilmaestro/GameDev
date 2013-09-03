@@ -16,7 +16,7 @@ var board = (function (_super) {
     function board(parent, log) {
         _super.call(this);
         this.tileSize = 75;
-        this.tileSpacing = 1;
+        this.tileSpacing = 0;
         this.gridCols = 16;
         this.gridRows = 11;
         this.totalTiles = 16 * 11;
@@ -43,8 +43,8 @@ var board = (function (_super) {
         var view = Utils.GetViewportSize();
 
         this.boardSize = {
-            width: (view.width - (this.boardPaddingX * 4)),
-            height: (view.height - 100 - (this.boardPaddingY * 4))
+            width: 1020,
+            height: 480
         };
 
         var tileHeight = ((this.boardSize.height - (this.boardPaddingY * 2)) / this.gridRows) - this.tileSpacing, tileWidth = ((this.boardSize.width - (this.boardPaddingX * 2)) / this.gridCols) - this.tileSpacing;
@@ -134,10 +134,24 @@ var board = (function (_super) {
 
                 if (minCols <= c && c < maxCols) {
                     tile = new Tile(this.tileOffsetX + (c * size), this.tileOffsetY + (r * size), this.tileSize, this.tileSize, this.getNewId().toString(), "#999", true);
-                    tile.name = "Floor";
+                    if (Math.random() < .8 || tile.id == "1" || tile.id == "176") {
+                        tile.name = "Floor";
+                        if (tile.id == "1") {
+                            tile.element.className = "Goal";
+                        } else if (tile.id == "176") {
+                            tile.element.className = "Start";
+                        } else {
+                            tile.element.className = "Floor";
+                        }
+                    } else {
+                        tile.name = "Column";
+                        tile.element.className = "Column";
+                        tile.isPassable = false;
+                    }
                 } else {
                     tile = new Tile(this.tileOffsetX + (c * size), this.tileOffsetY + (r * size), this.tileSize, this.tileSize, this.getNewId().toString(), "green", false);
                     tile.name = "Outside";
+                    tile.element.className = "Outside";
                 }
 
                 tile.gridID.column = c;
@@ -151,6 +165,49 @@ var board = (function (_super) {
                 tileCount++;
             }
         }
+    };
+    board.prototype.isRowPathPassable = function (fromRow, toRow, column) {
+        var row, f, t, retVal = true;
+
+        if (fromRow < toRow) {
+            f = fromRow;
+            t = toRow;
+        } else {
+            f = toRow;
+            t = fromRow;
+        }
+
+        for (row = f; row <= t; row++) {
+            var tile = this.getTile(column, row);
+            if (!tile.isPassable) {
+                retVal = false;
+                break;
+            }
+        }
+
+        return retVal;
+    };
+
+    board.prototype.isColumnPathPassable = function (fromCol, toCol, row) {
+        var col, f, t, retVal = true;
+
+        if (fromCol < toCol) {
+            f = fromCol;
+            t = toCol;
+        } else {
+            f = toCol;
+            t = fromCol;
+        }
+
+        for (col = f; col <= t; col++) {
+            var tile = this.getTile(col, row);
+            if (!tile.isPassable) {
+                retVal = false;
+                break;
+            }
+        }
+
+        return retVal;
     };
 
     board.prototype.getTile = function (column, row) {

@@ -36,7 +36,7 @@ class Tile extends DivElement implements ITile {
 
     getCssText(): string {
         var css: string = "";
-        var css = "position: absolute; top: "+ this.location.y +"px; left: "+ this.location.x +"px; width: " + this.size.width + "px; height: " + this.size.height + "px; background-color: "+ this.color +";";
+        var css = "position: absolute; top: "+ this.location.y +"px; left: "+ this.location.x +"px; width: " + this.size.width + "px; height: " + this.size.height + "px; ";
 
         return css;
     }

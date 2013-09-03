@@ -12,6 +12,7 @@ class Player extends DivElement implements IPlayer {
     board: board;
     moveCounter = 0;
     moveType = 4;
+    playerSideA = true;
 
     constructor(x: number, y: number, width: number, height: number, newId: string, color?: string) {
         super();
@@ -29,8 +30,16 @@ class Player extends DivElement implements IPlayer {
         this.update();
     }
 
-    flip() {
-        this.moveCounter += this.moveType;
+    flip():void {
+        this.playerSideA = !this.playerSideA;
+        if (this.playerSideA) {
+            this.color = "yellow";
+            this.moveCounter += 4;
+        } else {
+            this.color = "black";
+            this.moveCounter += 3;
+        }
+        this.update();
     }
 
     move(direction: Constants.Direction): void {

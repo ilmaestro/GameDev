@@ -6,3 +6,52 @@
 span {
     font-style: italic
 }
+
+/* game objects */
+.board {
+    border: 1px solid #444;
+}
+
+.Floor {
+    border: 1px solid #444;
+    background-image: url('Assets/terrain.png');
+    /*background-clip: content-box;*/
+    background-position: -337px 160px;
+    background-repeat: repeat;
+    background-color: #aaa;
+}
+
+.Outside {
+    border: 1px solid #444;
+    background-image: url('Assets/terrain.png');
+    background-position: -42px 534px;
+    background-repeat: repeat;
+    background-color: green;
+}
+.Column {
+    border: 1px solid #444;
+    background-color: #999;
+}
+.Goal {
+    border: 1px solid #444;
+    background-color: #0ff;
+}
+.Start {
+    border: 1px solid #444;
+    background-color: #b6ff00;
+}
+
+.player {
+    background-image: url('Assets/MainGuySpriteSheet_0.png');
+    /*background-clip: content-box;*/
+    background-position: 4px 5px;
+    background-repeat: no-repeat;
+}
+
+.monster {
+    background-image: url('Assets/aliensprite.png');
+    /*background-clip: content-box;*/
+    background-position: -37px 1px;
+    background-repeat: no-repeat;
+}
+

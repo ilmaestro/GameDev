@@ -9,7 +9,7 @@
 class board extends DivElement {
     tiles: Tile[];
     tileSize = 75;
-    tileSpacing = 1;
+    tileSpacing = 0;
     gridCols = 16;
     gridRows = 11;
     totalTiles = 16 * 11;
@@ -50,8 +50,8 @@ class board extends DivElement {
         var view: ISize = Utils.GetViewportSize();
 
         this.boardSize = {
-            width: (view.width - (this.boardPaddingX * 4)),
-            height: (view.height - 100 - (this.boardPaddingY * 4))
+            width: 1020, //(view.width - (this.boardPaddingX * 4)),
+            height: 480 //(view.height - 100 - (this.boardPaddingY * 4))
         };
 
         var tileHeight = ((this.boardSize.height - (this.boardPaddingY * 2)) / this.gridRows) - this.tileSpacing
@@ -144,12 +144,28 @@ class board extends DivElement {
             for (c = 0; c < columns; c++) {
                 var tile: Tile;
 
+
                 if (minCols <= c && c < maxCols) {
+                    
                     tile = new Tile(this.tileOffsetX + (c * size), this.tileOffsetY + (r * size), this.tileSize, this.tileSize, this.getNewId().toString(), "#999", true);
-                    tile.name = "Floor";    
+                    if (Math.random() < .8 || tile.id == "1" || tile.id == "176") {
+                        tile.name = "Floor";
+                        if (tile.id == "1") {
+                            tile.element.className = "Goal";
+                        } else if (tile.id == "176") {
+                            tile.element.className = "Start";
+                        } else {
+                            tile.element.className = "Floor";
+                        }
+                    } else {
+                        tile.name = "Column";
+                        tile.element.className = "Column";
+                        tile.isPassable = false;
+                    }
                 } else {
                     tile = new Tile(this.tileOffsetX + (c * size), this.tileOffsetY + (r * size), this.tileSize, this.tileSize, this.getNewId().toString(), "green", false);
                     tile.name = "Outside";
+                    tile.element.className = "Outside";
                 }
                 
                 tile.gridID.column = c;
@@ -162,6 +178,51 @@ class board extends DivElement {
                 tileCount++;
             }
         }
+    }
+    isRowPathPassable(fromRow: number, toRow: number, column: number): boolean {
+        var row, f, t, retVal: boolean = true;
+
+        if (fromRow < toRow) {
+            f = fromRow;
+            t = toRow;
+        } else {
+            f = toRow;
+            t = fromRow;
+        }
+
+        for (row = f; row <= t; row++) {
+            var tile = this.getTile(column, row);
+            if (!tile.isPassable) {
+                retVal = false;
+                break;
+            }
+        }
+
+
+        return retVal;
+    }
+
+    isColumnPathPassable(fromCol: number, toCol: number, row: number): boolean {
+        var col, f, t, retVal: boolean = true;
+
+        if (fromCol < toCol) {
+            f = fromCol;
+            t = toCol;
+        } else {
+            f = toCol;
+            t = fromCol;
+        }
+
+        for (col = f; col <= t; col++) {
+            var tile = this.getTile(col, row);
+            if (!tile.isPassable) {
+                retVal = false;
+                break;
+            }
+        }
+
+
+        return retVal;
     }
 
     getTile(column: number, row: number): Tile {

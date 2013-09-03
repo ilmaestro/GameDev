@@ -14,6 +14,7 @@ var Player = (function (_super) {
         _super.call(this);
         this.moveCounter = 0;
         this.moveType = 4;
+        this.playerSideA = true;
         this.location = { x: x, y: y };
         this.rotation = 0;
         this.size = { width: width, height: height };
@@ -28,7 +29,15 @@ var Player = (function (_super) {
         this.update();
     }
     Player.prototype.flip = function () {
-        this.moveCounter += this.moveType;
+        this.playerSideA = !this.playerSideA;
+        if (this.playerSideA) {
+            this.color = "yellow";
+            this.moveCounter += 4;
+        } else {
+            this.color = "black";
+            this.moveCounter += 3;
+        }
+        this.update();
     };
 
     Player.prototype.move = function (direction) {

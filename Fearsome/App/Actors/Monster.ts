@@ -18,11 +18,11 @@ class Monster extends DivElement implements IPlayer {
         this.location = { x: x, y: y };
         this.rotation = 0;
         this.size = { width: width, height: height };
-        this.name = "Monster";
+        this.name = "monster";
         this.id = newId;        
         this.color = color || "#000";
         this.element.id = this.id;
-        this.element.className = "Monster";
+        this.element.className = "monster";
 
         this.setupMover();
         this.update();
@@ -70,18 +70,22 @@ class Monster extends DivElement implements IPlayer {
                 this.mover.eatPlayer();
                 this.board.playerEaten();
             } else if (pGrid.column == mGrid.column) {
-                //same column, check for up vs. down
-                if (pGrid.row < mGrid.row) {
-                    direction = Constants.Direction.Up;
-                } else {
-                    direction = Constants.Direction.Down;
-                }                
+                if (this.board.isRowPathPassable(pGrid.row, mGrid.row, mGrid.column)) {
+                    //same column, check for up vs. down
+                    if (pGrid.row < mGrid.row && this.mover.moveDirection != Constants.Direction.Down) {
+                        direction = Constants.Direction.Up;
+                    } else if(this.mover.moveDirection != Constants.Direction.Up) {
+                        direction = Constants.Direction.Down;
+                    }
+                }
             } else if (pGrid.row == mGrid.row) {
-                //same row, check for left vs. right
-                if (pGrid.column < mGrid.column) {
-                    direction = Constants.Direction.Left;
-                } else {
-                    direction = Constants.Direction.Right;
+                if (this.board.isColumnPathPassable(pGrid.column, mGrid.column, mGrid.row)) {
+                    //same row, check for left vs. right
+                    if (pGrid.column < mGrid.column && this.mover.moveDirection != Constants.Direction.Right) {
+                        direction = Constants.Direction.Left;
+                    } else if(this.mover.moveDirection != Constants.Direction.Left) {
+                        direction = Constants.Direction.Right;
+                    }
                 }
             } else {
                 direction = null;
@@ -121,21 +125,19 @@ class Monster extends DivElement implements IPlayer {
             nextTile = this.board.getTile(gridRev.column, gridRev.row);
         }
 
-        if (nextTile.isPassable) {
-            this.currentTile = nextTile;
-            this.location = nextTile.location;
-        }
+        this.currentTile = nextTile;
+        this.location = nextTile.location;
         this.update();
     }
 
     getCssText(): string {
-        var css = "position: absolute; text-align: center; color: #fff; text-align: center; ";
+        var css = "position: absolute; ";
 
         css += "-webkit-transform: translate(" + this.location.x + "px, " + this.location.y + "px) rotate(" + this.rotation + "deg); -webkit-transform-origin: center center 0;"
         css += "-moz-transform: translate(" + this.location.x + "px, " + this.location.y + "px) rotate(" + this.rotation + "deg); -moz-transform-origin: center center 0;"
         css += "-o-transform: translate(" + this.location.x + "px, " + this.location.y + "px) rotate(" + this.rotation + "deg); -o-transform-origin: center center 0;"
         css += "-ms-transform: translate(" + this.location.x + "px, " + this.location.y + "px) rotate(" + this.rotation + "deg); -ms-transform-origin: center center 0;"
-        css += " width: " + this.size.width + "px; height: " + this.size.height + "px; background-color: " + this.color + ";";
+        css += " width: " + this.size.width + "px; height: " + this.size.height + "px; ";
 
         return css;
     }
