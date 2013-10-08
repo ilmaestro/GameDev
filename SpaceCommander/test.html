@@ -1,0 +1,53 @@
+<html>
+<head>
+
+    <script src="js/lib/howler.js" type="text/javascript"></script>
+</head>
+<body>
+	<input type="button" value="Play" onclick="play()">
+<script type="text/javascript">
+	var sound = new Howl({
+		  urls: ['game-media/hit.mp3']
+		});
+	function play(){
+		sound.stop();
+		sound.play();
+	}
+	var canvas = document.createElement("canvas");
+	document.body.appendChild(canvas);
+
+    canvas.width = 100;
+    canvas.height = 100;
+
+    var ctx = canvas.getContext('2d');
+
+	    ctx.strokeStyle = "green";
+	    ctx.lineWidth = 4;
+		ctx.fillStyle = "#000";
+
+	   	ctx.beginPath();
+		ctx.arc(50, 50, 44, 0, 2 * Math.PI, true);
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(0,75);
+		ctx.lineTo(50, 0);
+		ctx.lineTo(100, 75);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.rect(40,40, 20, 20);
+		ctx.lineWidth = 1;
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.font = "20px Georgia";
+		ctx.fillStyle = "green";
+		var m = ctx.measureText("score");
+		ctx.fillText("score",0,20);
+</script>
+</body>
+</html>
