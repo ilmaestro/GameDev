@@ -19,6 +19,7 @@ Game.PlayState = (function(Game){
 		// sprites
 		this.parallax;
 		this.grid;
+		this.explosion;
 		this.stations = [];
 		this.projectiles = [];
 		this.planets = [];
@@ -38,6 +39,11 @@ Game.PlayState = (function(Game){
 		// styles
 		this.backgroundStyle = "#000";
 		this.lineStyle = "#fff";
+
+		// timing
+		this.currentTime = Date.now();
+		this.lastTime = this.currentTime;
+		this.viewChangeDelay = 0; //ms
 	}
 
 	/*
@@ -102,6 +108,7 @@ Game.PlayState = (function(Game){
 
 	PlayState.prototype.setup = function(){
 		jaws.clear();
+		var self = this;
 
 		// set up the chase camera view
         this.viewport = new jaws.Viewport({ max_x: this.world.viewport_max_x, max_y: this.world.viewport_max_y });
@@ -115,15 +122,21 @@ Game.PlayState = (function(Game){
 		this.parallax.addLayer({image: "starfield_4.png", damping: 10});
 		this.parallax.addLayer({image: "starfield_5.png", damping: 5});
 
-		//sprites
+		// explosion animation
+		
+		this.explosion = new Game.Explosion({});
+		
+		// create grid
 		this.grid = new Game.Grid({
-			x: 0,
-			y: 0,
-			width: this.viewport.max_x,
-			height: this.viewport.max_y,
+			x: 20,
+			y: 20,
+			width: this.viewport.max_x - 40,
+			height: this.viewport.max_y - 40,
 			gridSize: this.gridSize,
 			offset: this.gridOffset
 		});
+
+		//create station 1
 		this.stations.push(new Game.Station({
 			x: 100,
 			y: 100,
@@ -133,6 +146,8 @@ Game.PlayState = (function(Game){
 			color: "#BAA600",
 			name: "p1"
 		}));
+
+		// station 2
 		this.stations.push(new Game.Station({
 			x: this.viewport.max_x - 100,
 			y: this.viewport.max_y - 100,
@@ -142,28 +157,45 @@ Game.PlayState = (function(Game){
 			color: "#BA0071",
 			name: "p2"
 		}));
+
+		// the projectile
+		var bounds = this.grid.rect().clone();
+		bounds.shrink(10,10);
+		bounds.moveTo(30,30);
 		this.projectiles.push(new Game.Projectile({
 			x: 0,
 			y: 0,
 			anchor: "center",
-			bounds: this.grid.rect()
+			bounds: bounds
 		}));
-		this.planets.push(new Game.Planetoid({
-			x: this.viewport.max_x / 2,
-			y: this.viewport.max_y / 2,
-			radius: 250,
-			width: 500,
-			height: 500,
-			mass: -3000,
-			anchor: "center"
-		}));
+
+		//the planets
+		// this.planets.push(new Game.Planetoid({
+		// 	x: this.viewport.max_x / 2,
+		// 	y: this.viewport.max_y / 2,
+		// 	radius: 250,
+		// 	width: 500,
+		// 	height: 500,
+		// 	mass: -3000,
+		// 	anchor: "center"
+		// }));
 		this.planets.push(new Game.Planetoid({
 			x: this.viewport.max_x / 4,
 			y: this.viewport.max_y / 3,
 			radius: 100,
 			width: 200,
 			height: 200,
-			mass: 8000,
+			mass: 4000,
+			anchor: "center"
+		}));
+
+		this.planets.push(new Game.Planetoid({
+			x: 3 * this.viewport.max_x / 4,
+			y: this.viewport.max_y / 3,
+			radius: 100,
+			width: 200,
+			height: 200,
+			mass: 4000,
 			anchor: "center"
 		}));
 
@@ -173,7 +205,17 @@ Game.PlayState = (function(Game){
 			radius: 100,
 			width: 200,
 			height: 200,
-			mass: 8000,
+			mass: 4000,
+			anchor: "center"
+		}));
+
+		this.planets.push(new Game.Planetoid({
+			x: this.viewport.max_x / 4,
+			y: 2 * this.viewport.max_y / 3,
+			radius: 100,
+			width: 200,
+			height: 200,
+			mass: 4000,
 			anchor: "center"
 		}));
 
@@ -187,9 +229,11 @@ Game.PlayState = (function(Game){
 	*/
 
 	PlayState.prototype.update = function(){
-		var i = 0, projectileAlive = false, self = this;
+		this.currentTime = Date.now();
+		var i = 0, projectileAlive = false, self = this, elapsedTime = this.currentTime - this.lastTime;
 
 		this.world.update();
+        this.explosion.update();
 
         //check if user let go of the drag
         if(this.isDragging && !jaws.pressed("left_mouse_button")){
@@ -209,13 +253,30 @@ Game.PlayState = (function(Game){
 		doIfAlive(this.projectiles, function(projectile){
 			var force = Game.Helper.totalForces(projectile, self.planets);
 			projectile.velocity.add(force);
-			projectile.update();
+			var result = projectile.update();
+			if (result.justDied === true){
+				//update explosion
+				self.explosion.beginAnim(projectile.x, projectile.y);
 
+				//update view change delay
+				self.viewChangeDelay = 2000; //2 seconds
+        		self.lastTime = self.currentTime;
+        		elapsedTime = 0;
+			}
+
+			//detect if project collides with planets
 			doIfCollideCircles(projectile, self.planets, function(planet){
-				projectile.isAlive = false;
-	        	self.world.sfxhit();
+				planet.updateProjectile(projectile);
+				self.world.sfxhit();
 
-			})
+				self.explosion.beginAnim(projectile.x, projectile.y);
+
+				//update view change delay
+				self.viewChangeDelay = 2000; //2 seconds
+        		self.lastTime = self.currentTime;
+        		elapsedTime = 0;
+			});
+
 			// jaws.collideOneWithMany(projectile, self.planets, function(projectile, planet){
 			// 	projectile.isAlive = false;
 			// });
@@ -226,9 +287,17 @@ Game.PlayState = (function(Game){
 					projectile.parentStation = "";
 					station.damaged();
 					self.stations[self.currentStation].scored();
+
+					self.explosion.beginAnim(projectile.x, projectile.y);
 	        		self.world.sfxhit();
+
+	        		//update view change delay
+					self.viewChangeDelay = 2000; //2 seconds
+        			self.lastTime = self.currentTime;
+        			elapsedTime = 0;
 				}
 			});
+
 			if(projectile.isAlive){
 				self.viewport.centerAround(projectile);
 				projectileAlive = true;
@@ -239,9 +308,11 @@ Game.PlayState = (function(Game){
 	
 		});
 
-        if (!projectileAlive) {
+        if (!projectileAlive && elapsedTime >= this.viewChangeDelay) {
         	this.viewport.centerAround(this.stations[this.currentStation]);
+        	this.viewChangeDelay = 0;
         }
+
         
         this.parallax.camera_x = this.viewport.x;
         this.parallax.camera_y = this.viewport.y;
@@ -254,24 +325,33 @@ Game.PlayState = (function(Game){
 	*/
 
 	PlayState.prototype.draw = function(){
-		var self = this;
+		var self = this, i = 0;
 		jaws.clear();
 		this.parallax.draw();
 		this.viewport.draw(this.grid);
 
 		this.viewport.draw(this.stations);
-		this.viewport.draw(this.planets);
+		
+		//draw launcher
+		this.viewport.apply(function(){
+			for(i = 0; i < self.stations.length; i++) {
+				if(self.stations[i].isAlive){
+					self.stations[i].draw();
+				}
+			}
+			for(i = 0; i < self.planets.length; i++) {
+				self.planets[i].draw();
+			}
+			doIfLaunching(self.stations, function(station){
+	        	Game.Helper.drawLauncherArrow(jaws.context, station, self.touch, self.launchMaxPower);        		
+			});
+		});
 
 		doIfAlive(this.projectiles, function(projectile){
 			self.viewport.draw(projectile);
 		});
 
-		//draw launcher
-		this.viewport.apply(function(){
-			doIfLaunching(self.stations, function(station){
-	        	Game.Helper.drawLauncherArrow(jaws.context, station, self.touch, self.launchMaxPower);        		
-			});
-		});
+		this.explosion.drawFrame(this.viewport);
 	};
 
 	PlayState.prototype.launch = function(object, point1, point2) {

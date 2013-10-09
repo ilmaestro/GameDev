@@ -51,6 +51,11 @@ body {
     color: red;
 }
 
+input {
+    width: 150px;
+    font-size: 20px;
+}
+
 @media screen and (-ms-view-state: fullscreen-landscape) {
 }
 

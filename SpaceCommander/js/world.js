@@ -52,7 +52,7 @@ Game.World = (function(Game){
 
         // start downloading all the art using a preloader progress screen
         jaws.assets.root = "game-media/";
-        jaws.assets.add(["starfield_1.png", "starfield_2.png","starfield_3.png","starfield_4.png","starfield_5.png",]); //"gui.png", "font.png", "parallax.png", "player.png", "particles.png", "tiles.png", "msgbox.png", "enemies.png"]);
+        jaws.assets.add(["starfield_1.png", "starfield_2.png","starfield_3.png","starfield_4.png","starfield_5.png","explosion_2.png"]); //"gui.png", "font.png", "parallax.png", "player.png", "particles.png", "tiles.png", "msgbox.png", "enemies.png"]);
 
 
         //viewport_max_x = leveldata.width * leveldata.tilewidth;

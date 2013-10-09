@@ -3,9 +3,6 @@ Game.Station = (function(Game){
 	function Station(options){
 		options.isAlive = options.isAlive || false;
 		options.color = options.color || "#000";
-		options.image = getPlayerImage(0, options.color);
-
-		jaws.Sprite.call(this, options);
 
 		// bounds
 		this.bounds = options.bounds || new jaws.Rect({});
@@ -20,12 +17,18 @@ Game.Station = (function(Game){
 		this.isSelected = false;
 		this.score = 0;
 		this.alpha = 1;
+		this.currentHealth = 3;
+		this.health = 3;
 
 		// constants
         this.BOUNCE = 0.4;
         this.FRICTION = 0.03;
         this.POWER = 5; 
         this.SPEED = 20; // pixels per frame
+
+        //initialize image
+        options.image = getPlayerImage(this.score, this.health, this.currentHealth, this.color, this.alpha);
+		jaws.Sprite.call(this, options);
 	}
 
 	Station.prototype = new jaws.Sprite({});
@@ -34,7 +37,7 @@ Game.Station = (function(Game){
     	if(!this.isAlive) {
     		return;
     	}
-    	
+
     	if(this.velocity.mag() > .1) {
     		this.velocity.limit(this.SPEED);
 	        //Game.Helper.moveSpriteWithBounds(this.velocity, this, this.bounds, true);
@@ -47,51 +50,74 @@ Game.Station = (function(Game){
 
     Station.prototype.scored = function(){
     	this.score++;
-    	this.setImage(getPlayerImage(this.score, this.color, this.alpha));
+    	this.setImage(getPlayerImage(this.score, this.health, this.currentHealth, this.color, this.alpha));
     };
 
     Station.prototype.damaged = function(){
-    	this.alpha -= .2;
-    	this.setImage(getPlayerImage(this.score, this.color, this.alpha));
-    	if(this.alpha < .2) {
+    	this.currentHealth -= 1;
+    	this.setImage(getPlayerImage(this.score, this.health, this.currentHealth, this.color, this.alpha));
+    	if(this.currentHealth <= 0) {
     		this.isAlive = false;
     	}
     };
 
-	function getPlayerImage(score, color, alpha) {
+	function getPlayerImage(score, health, currentHealth, color, alpha) {
 		//create an offscreen canvas
 		var canvas = document.createElement("canvas");
 	    // liquid layout: stretch to fill
-	    canvas.width = 100;
-	    canvas.height = 100;
+	    canvas.width = 90;
+	    canvas.height = 90;
+
 	    var ctx = canvas.getContext('2d');
-       	ctx.strokeStyle = "green";
-	    ctx.lineWidth = 4;
+	    var lineWidth = 2,
+	    	center = new Game.Vector(canvas.width / 2, canvas.height / 2), 
+	    	radius = canvas.width / 2 - lineWidth;
+
+       	ctx.strokeStyle = color;
+	    ctx.lineWidth = lineWidth;
 		ctx.fillStyle = color;
 
+		//draw initial circle
 	   	ctx.beginPath();
-		ctx.arc(50, 50, 44, 0, 2 * Math.PI, true);
+		ctx.arc(center.x, center.y, radius-8, 0, 2 * Math.PI, true);
 		ctx.fill();
 		ctx.stroke();
 
+		//draw inner triangle
+		var triangleOffset = 5;
 		ctx.fillStyle = "#000";
 		ctx.beginPath();
-		ctx.moveTo(0,75);
-		ctx.lineTo(50, 0);
-		ctx.lineTo(100, 75);
+		ctx.moveTo(triangleOffset,canvas.height * .75 - triangleOffset);
+		ctx.lineTo(canvas.width * .5, triangleOffset);
+		ctx.lineTo(canvas.width-triangleOffset, canvas.height * .75 - triangleOffset);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
 
-		ctx.beginPath();
-		ctx.rect(40,40, 20, 20);
-		ctx.lineWidth = 2;
-		ctx.stroke();
+		//draw health squares
+		ctx.lineWidth = lineWidth / 2;
+		ctx.fillStyle = color;
+		var i = 0,
+			squareSize = 10,
+			spaceSize = 2,
+			offsetX = center.x - ((squareSize+spaceSize) * health) / 2 + spaceSize,
+			offsetY = center.y + spaceSize;
 
+		for (i = 0; i < health; i++){
+			ctx.beginPath();
+			ctx.rect(offsetX + i * (squareSize+spaceSize),offsetY, squareSize, squareSize); // draw a rect centered, half the radius
+			ctx.stroke();
+
+			if (i < currentHealth){
+				ctx.fill();
+			}
+		}
+		
+		//draw score text
 		ctx.beginPath();
 		ctx.font = "20px Georgia";
 		ctx.fillStyle = "green";
-		ctx.fillText(score,0,20);
+		ctx.fillText(score,0,15);
 
 	    return canvas;
 	}

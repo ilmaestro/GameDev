@@ -34,20 +34,24 @@ Game.Projectile = (function(Game){
     };
 
     Projectile.prototype.update = function() {
+    	var result = {justDied: false};
+
     	if(!this.isAlive) {
-    		return;
+    		return result;
     	}
 
     	if(this.velocity.mag() > .1 && this.rect().collideRect(this.bounds)) {
     		this.velocity.limit(this.SPEED);
 	        //Game.Helper.moveSpriteWithBounds(this.velocity, this, this.bounds, true);
 	        this.move(this.velocity.x, this.velocity.y);
+	        //subtract friction
+        	this.velocity.mult(1 - this.FRICTION);
         } else {
         	this.isAlive = false;
+        	result.justDied = true;
         }
 
-        //subtract friction
-        this.velocity.mult(1 - this.FRICTION);
+    	return result;
     };
 
 	function getImage() {
