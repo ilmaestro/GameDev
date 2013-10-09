@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" /> 
+
+    <!-- For online versions of your game -->
+    <title>Space Star Fields</title>
+    <style type="text/css">
+    body{
+    	background-color: #000;
+    }
+    </style>
+
+</head>
+<body>
+<script type="text/javascript">
+	window.onload = function(){
+		createStarField("stars_1", 5000, .2, 2000, 2000)
+	};
+
+
+	function createStarField(name, numStars, alpha, max_x, max_y) {
+		var i = 0;
+
+		//create an offscreen canvas
+		var canvas = document.createElement("canvas");
+	    // liquid layout: stretch to fill
+	    canvas.width = max_x;
+	    canvas.height = max_y;
+
+	    var ctx = canvas.getContext('2d');
+	    for(i = 0; i < numStars; i++){
+	    	var x = Math.floor(Math.random() * max_x),
+	    		y = Math.floor(Math.random() * max_y);
+
+	    	ctx.beginPath();
+	    	ctx.arc(x, y, 1, 0, 2 * Math.PI, true);
+	    	ctx.closePath();
+	    	ctx.fillStyle = "rgba(255, 255, 255, "+ alpha + ")";
+	    	ctx.fill();
+	    }
+		document.getElementById('canvasImg').src = canvas.toDataURL();
+	}
+
+</script>
+<img id="canvasImg" alt="Right click to save me!">
+<!-- fps and debug information goes here -->
+<span id='info'></span>
+
+</body>
+</html>
