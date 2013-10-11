@@ -1,7 +1,3 @@
-/// <reference path="../Interfaces/ISize.ts" />
-/// <reference path="../Interfaces/IPoint.ts" />
-/// <reference path="../Interfaces/ITile.ts" />
-/// <reference path="../Interfaces/IElement.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -32,4 +28,3 @@ var Wall = (function (_super) {
     };
     return Wall;
 })(Tile);
-//# sourceMappingURL=Wall.js.map

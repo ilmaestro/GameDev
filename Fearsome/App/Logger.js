@@ -15,4 +15,3 @@ var logger = (function () {
     };
     return logger;
 })();
-//# sourceMappingURL=Logger.js.map

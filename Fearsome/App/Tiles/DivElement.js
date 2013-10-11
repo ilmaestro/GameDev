@@ -1,4 +1,3 @@
-/// <reference path="../Interfaces/IElement.ts" />
 var DivElement = (function () {
     function DivElement() {
         this.element = document.createElement("div");
@@ -18,4 +17,3 @@ var DivElement = (function () {
     };
     return DivElement;
 })();
-//# sourceMappingURL=DivElement.js.map

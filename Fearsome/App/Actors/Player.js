@@ -1,7 +1,3 @@
-/// <reference path="../Utils.ts" />
-/// <reference path="../Board/Board.ts" />
-/// <reference path="../Constants.ts" />
-/// <reference path="../Tiles/Tile.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -85,10 +81,6 @@ var Player = (function (_super) {
 
     Player.prototype.update = function () {
         this.setCssText(this.getCssText());
-        //if (this.currentTile) {
-        //    this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
-        //}
     };
     return Player;
 })(DivElement);
-//# sourceMappingURL=Player.js.map

@@ -1,4 +1,3 @@
-/// <reference path="Interfaces/ISize.ts" />
 var Utils;
 (function (Utils) {
     function GetViewportSize() {
@@ -75,4 +74,3 @@ var Utils;
     }
     Utils.GetDirectionInDegrees = GetDirectionInDegrees;
 })(Utils || (Utils = {}));
-//# sourceMappingURL=Utils.js.map

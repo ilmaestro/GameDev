@@ -1,6 +1,3 @@
-/// <reference path="../Interfaces/ISize.ts" />
-/// <reference path="../Interfaces/IPoint.ts" />
-/// <reference path="../Interfaces/ITile.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -40,4 +37,3 @@ var Tile = (function (_super) {
     };
     return Tile;
 })(DivElement);
-//# sourceMappingURL=Tile.js.map

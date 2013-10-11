@@ -1,8 +1,3 @@
-/// <reference path="../Utils.ts" />
-/// <reference path="../Board/Board.ts" />
-/// <reference path="../Constants.ts" />
-/// <reference path="../Tiles/Tile.ts" />
-/// <reference path="MonsterMover.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -35,13 +30,11 @@ var Monster = (function (_super) {
         var self = this;
         self.setDirection();
         if (self.mover.moveMonster(self)) {
-            //keep moving
             self.update();
             setTimeout(function () {
                 self.moving();
             }, 500);
         } else {
-            //stopped
             self.setDirection();
             self.update();
         }
@@ -62,7 +55,6 @@ var Monster = (function (_super) {
             var pGrid = this.board.player.currentTile.gridID, mGrid = this.currentTile.gridID;
 
             if (pGrid.column == mGrid.column && pGrid.row == mGrid.row) {
-                // monster EATS player
                 this.mover.eatPlayer();
                 this.board.playerEaten();
             } else if (pGrid.column == mGrid.column) {
@@ -137,12 +129,7 @@ var Monster = (function (_super) {
     Monster.prototype.update = function () {
         this.setCssText(this.getCssText());
 
-        //left is 0 degrees.
         this.element.innerText = "<---";
-        //if (this.currentTile) {
-        //    this.element.innerText = "C-" + this.currentTile.gridID.column + " R-" + this.currentTile.gridID.row;
-        //}
     };
     return Monster;
 })(DivElement);
-//# sourceMappingURL=Monster.js.map

@@ -1,8 +1,3 @@
-/// <reference path="../Utils.ts" />
-/// <reference path="../Board/Board.ts" />
-/// <reference path="../Constants.ts" />
-/// <reference path="../Tiles/Tile.ts" />
-/// <reference path="../../Scripts/d.ts/underscore/underscore.d.ts" />
 var MonsterMover = (function () {
     function MonsterMover(initialDirection) {
         this.moveDeck = new MoveDeck();
@@ -67,14 +62,6 @@ var MoveDeck = (function () {
     function MoveDeck() {
         this.createMoveTypes();
     }
-    /*
-    move types:
-    - 5, 5 spaces, stop on kill count: infinite
-    - 8, 8 spaces, stop on kill count: infinite
-    - 10, 10 spaces, stop on kill count: infinite
-    - I, 20 spaces, stop on kill count: 1
-    - II, 20 spaces, stop on kill count: 2
-    */
     MoveDeck.prototype.createMoveTypes = function () {
         this.moveCards = [];
         this.moveCards.push(new MoveCard("5", 5, 99));
@@ -104,4 +91,3 @@ var MoveDeck = (function () {
     };
     return MoveDeck;
 })();
-//# sourceMappingURL=MonsterMover.js.map

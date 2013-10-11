@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="apple-mobile-web-app-title" content="Space Commander" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+ 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no" />
+
+    <!-- For online versions of your game -->
+    <title>Space Commander</title>
+
+    <!-- WinJS references -->
+    <!-- <link href="//Microsoft.WinJS.1.0/css/ui-dark.css" rel="stylesheet" /> -->
+    <!-- <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.1.0/js/ui.js"></script> -->
+
+    <!-- framework references -->
+    <!-- <script src="js/default.js" type="text/javascript"></script> -->
+    <script src="js/lib/jaws.js" type="text/javascript"></script>
+    <script src="js/lib/howler.js" type="text/javascript"></script>
+
+    <!-- game-specific references -->
+    <link href="app-css/game.css" rel="stylesheet" />
+
+    <link rel="apple-touch-icon" href="/images/icon.png" />
+    <link rel="apple-touch-startup-image" href="/images/startup.jpg">
+    <!-- <script src="game-media/level1.js" type="text/javascript"></script> -->
+
+    <!-- game starts here! -->
+    <script src="js/vector.js" type="text/javascript"></script>  
+    <script src="js/log.js" type="text/javascript"></script>
+    <script src="js/helper.js" type="text/javascript"></script>
+    <script src="js/grid.js" type="text/javascript"></script>
+    <script src="js/station.js" type="text/javascript"></script>
+    <script src="js/planetoid.js" type="text/javascript"></script>
+    <script src="js/projectile.js" type="text/javascript"></script>
+    <script src="js/explosion.js" type="text/javascript"></script>
+    <script src="js/playstate.js" type="text/javascript"></script>  
+    <script src="js/world.js" type="text/javascript"></script>  
+</head>
+<body>
+<script type="text/javascript">
+	
+	var sound = new Howl({
+		  urls: ['game-media/hit.mp3'],
+		  onend: function() {
+		  	var game = new Game.World();
+		    game.init(function(){
+				// and begin by running its setup function, then the update/draw loop
+				jaws.start(game.state);
+	        	//window.scrollTo(0, 1);
+			});
+		  }
+		});
+	//jaws.onload = function(){
+	function play(){
+		sound.stop();
+		sound.play();
+		var btn = document.getElementById("btn");
+		document.body.removeChild(btn);
+	}
+
+    
+</script>
+<!-- fps and debug information goes here -->
+<span id='info'></span>
+<span id='fps'></span>
+<input type="button" id="btn" value="Start Game" onclick="play()">
+
+
+</body>
+</html>

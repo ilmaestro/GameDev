@@ -38,8 +38,8 @@
     <Content Include="Assets\MainGuySpriteSheet_0.png" />
     <Content Include="Assets\terrain.png" />
     <Content Include="default.htm" />
-    <Content Include="Scripts\d.ts\jquery.d.ts" />
     <Content Include="Scripts\d.ts\underscore\underscore.d.ts" />
+    <None Include="Ideabator.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />

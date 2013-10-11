@@ -1,10 +1,3 @@
-/// <reference path="../Utils.ts" />
-/// <reference path="../Actors/Player.ts" />
-/// <reference path="../Actors/Monster.ts" />
-/// <reference path="../Actors/MonsterMover.ts" />
-/// <reference path="../Tiles/Tile.ts" />
-/// <reference path="../Tiles/Wall.ts" />
-/// <reference path="../Tiles/DivElement.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -60,15 +53,12 @@ var board = (function (_super) {
         this.sizeToView();
         this.setupTiles(this.gridCols, this.gridRows);
 
-        //this.setupWalls(13);
-        //player
         var startingPlayerTile = this.tiles[this.tiles.length - 1];
         this.player = new Player(startingPlayerTile.location.x, startingPlayerTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "yellow");
         this.player.currentTile = startingPlayerTile;
         this.player.board = this;
         this.player.appendTo(this.element);
 
-        //monster
         var startingMonsterTile = this.tiles[0];
         this.monster = new Monster(startingMonsterTile.location.x, startingMonsterTile.location.y, this.tileSize, this.tileSize, this.getNewId().toString(), "purple");
         this.monster.currentTile = startingMonsterTile;
@@ -77,7 +67,6 @@ var board = (function (_super) {
     };
 
     board.prototype.addEvents = function () {
-        //add events
         var self = this;
         Utils.AddEvent(window, "keyup", function (e) {
             if (!self.monster.mover.isMoving()) {
@@ -159,7 +148,6 @@ var board = (function (_super) {
                 tile.gridRevID.column = columns - c - 1;
                 tile.gridRevID.row = rows - r - 1;
 
-                //tile.setText(tileCount.toString());
                 tile.appendTo(this.element);
                 this.tiles.push(tile);
                 tileCount++;
@@ -219,16 +207,6 @@ var board = (function (_super) {
         return this.tiles[tileNum];
     };
 
-    //getTile(column: number, row: number): Tile {
-    //    var retVal: Tile = null
-    //        ,i;
-    //    for (i = 0; i < this.tiles.length; i++) {
-    //        if (this.tiles[i].gridID.column == column && this.tiles[i].gridID.row == row) {
-    //            retVal = this.tiles[i];
-    //        }
-    //    }
-    //    return retVal;
-    //}
     board.prototype.setupWalls = function (length) {
         var c, s, sides = 4, wallCount = 0, width = this.tileSize, height = this.tileSize / 2, tWidth = width + this.tileSpacing, tHeight = (height) + this.tileSpacing, curX = 0, curY = 0, xIncrement = 0, yIncrement = 0;
 
@@ -272,13 +250,8 @@ var board = (function (_super) {
     };
 
     board.prototype.getCssText = function () {
-        //var view: ISize = Utils.GetViewportSize()
-        //    , top = this.boardPaddingY, left = this.boardPaddingX
-        //    , w = view.width - (this.boardPaddingX * 2)
-        //    , h = view.height - (this.boardPaddingY * 2);
         var css = "position: relative; width: " + this.boardSize.width + "px; height: " + this.boardSize.height + "px; background-color: #efefef;";
 
-        //var css = "position: absolute; top: " + top + "px; left: " + left + "px; width: " + w + "px; height: " + h + "px; background-color: #efefef;";
         return css;
     };
 
@@ -287,4 +260,3 @@ var board = (function (_super) {
     };
     return board;
 })(DivElement);
-//# sourceMappingURL=Board.js.map
