@@ -19,6 +19,11 @@ Game.Player = (function(Game){
 	    this.lastSelectedStation = 0;
 	}
 
+	Player.prototype.destroy = function () {
+	    this.isAlive = false;
+	    toastr.info(this.name + " destroyed.");
+	};
+
 	Player.prototype.getPosition = function (max_x, max_y) {
 	    var coords = {};
 	    switch (this.id) {

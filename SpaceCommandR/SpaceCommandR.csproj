@@ -85,8 +85,17 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Client\Forms\BaseForm.js" />
+    <Content Include="Client\Forms\LaunchGame.js" />
+    <Content Include="Client\Forms\JoinGame.js" />
+    <Content Include="Client\Forms\CreateGame.js" />
+    <Content Include="Client\Forms\FormRouter.js" />
+    <Content Include="Client\Forms\UpdateProfile.js" />
+    <Content Include="Client\Game\lobby.js" />
     <Content Include="Client\Game\gameover.js" />
+    <Content Include="Client\Game\menu.js" />
     <Content Include="Client\Game\title.js" />
+    <Content Include="Client\globals.js" />
     <Content Include="Client\Player\player.js" />
     <Content Include="Client\Space\background.js" />
     <Content Include="Client\Projectile\projectileManager.js" />
@@ -103,6 +112,10 @@
     <Content Include="Client\Game\world.js" />
     <Content Include="Content\attack.mp3" />
     <Content Include="Content\attack.wav" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\explosion_2.png" />
     <Content Include="Content\game.css" />
     <Content Include="Content\hit.mp3" />
@@ -118,6 +131,11 @@
     <Content Include="Content\swish.wav" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="screens.html" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="test.html" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
@@ -126,6 +144,9 @@
     <Content Include="Content\hit.ogg" />
     <Content Include="Content\swish.ogg" />
     <Content Include="Content\toastr.less" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\howler.js" />
     <Content Include="Scripts\jaws.js" />

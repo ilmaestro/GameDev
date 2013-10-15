@@ -7,7 +7,7 @@ Game.GameOver = (function(Game){
 	*
 	*/
 
-	function GameOver (world, viewport, fpsElement){
+	function GameOver (world, viewport){
 		this.world = world;
 		this.viewport = viewport;
 

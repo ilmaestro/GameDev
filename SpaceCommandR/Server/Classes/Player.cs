@@ -14,5 +14,16 @@ namespace SpaceCommandR.Server.Classes
         public bool isActive { get; set; }
         public int score { get; set; }
         public int energy { get; set; }
+        public int lastSelectedStation { get; set; }
+
+        public void Update(Player player)
+        {
+            this.color = player.color;
+            this.isAlive = player.isAlive;
+            this.isActive = player.isActive;
+            this.score = player.score;
+            this.energy = player.energy;
+            this.lastSelectedStation = player.lastSelectedStation;
+        }
     }
 }

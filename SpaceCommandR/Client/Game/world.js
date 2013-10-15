@@ -12,8 +12,19 @@ Game.World = (function(Game){
         this.viewport_max_y = 2000; // ...depending on map data
 
         //game state
-        this.state = new Game.Multiplayer(this, this.viewport);
-        this.userName = "";
+        this.titlescreen = new Game.Title(this, this.viewport);
+        this.lobby = new Game.Lobby(this, this.viewport);
+        this.multiplayer = new Game.Multiplayer(this, this.viewport);
+        this.currentState = this.titlescreen;
+
+        this.userName = localStorage.getItem(Game.Globals.PlayerNameKey);
+        this.userColor = localStorage.getItem(Game.Globals.PlayerColorKey);
+        this.gameName = "";
+
+        // SignalR
+        this.connection = $.connection;
+        this.chatHub = this.connection.chatHub;
+        this.commandHub = this.connection.commandHub;
 
         // constants
         this.BOUNCE = 0.6;
@@ -24,20 +35,22 @@ Game.World = (function(Game){
         this.soundMusic = null;
         this.soundAttack = null;
         this.soundHit = null;
-
-        this.setupHubs();
 	}
 
-    World.prototype.join = function (username, usercolor) {
+    World.prototype.initPlayer = function (username, usercolor) {
         this.userName = username;
-        this.commandHub.server.joinGame(username, usercolor);
+        this.userColor = usercolor;
+        //this.commandHub.server.joinGame(username, usercolor);
     };
 
     World.prototype.update = function(){
         this.fps.innerHTML = "FPS: " + jaws.game_loop.fps;
 
-        if(jaws.pressed("left")){
+        if (jaws.pressed("esc")) {
+            this.currentState = this.titlescreen;
+            jaws.switchGameState(this.currentState);
         }
+
         if(jaws.pressed("up")){
         }
         if(jaws.pressed("right")){
@@ -98,42 +111,85 @@ Game.World = (function(Game){
         //pauseGame(true);
     };
 
-    World.prototype.setupHubs = function () {
+    World.prototype.setupHubs = function (callback) {
         var self = this;
         // add push events
-        this.connection = $.connection;
-        this.chatHub = this.connection.chatHub;
-        this.commandHub = this.connection.commandHub;
 
-        //setup events
+
+        //setup chat events
         this.chatHub.client.broadcastMessage = function (name, message) {
             toastr.info(name + ': ' + message);
         };
 
+        this.commandHub.client.broadcastMessage = function (name, message) {
+            toastr.info(name + ': ' + message);
+
+        }
+
+        //setup lobby events
         this.commandHub.client.updatePlayers = function (playerList) {
-            self.state.onUpdatePlayers(playerList);
-            toastr.info("Updated player list from server.");
+            self.lobby.onUpdatePlayers(playerList);
+            toastr.info("Updated from server.");
         };
 
         this.commandHub.client.addPlayer = function (player) {
-            self.state.onNewPlayer(new Game.Player(player));
-            toastr.info("New player added, " + player.name);
+            self.lobby.onNewPlayer(new Game.Player(player));
         };
 
+        this.commandHub.client.updateGames = function (gameList) {
+            self.lobby.onUpdateGames(gameList);
+        };
+
+        //setup multiplayer events
         this.commandHub.client.spawnProjectile = function (station, x, y, vx, vy) {
-            self.state.onSpawnProjectile(station, x, y, vx, vy);
-            toastr.info("spawned projectile. S: " + station);
-        }
+            self.multiplayer.onSpawnProjectile(station, x, y, vx, vy);
+        };
 
-        this.commandHub.client.setStation = function (stationId) {
-            self.state.onSetStation(stationId);
-            toastr.info("set new station: " + stationId);
-        }
+        this.commandHub.client.startTurn = function (player) {
+            self.multiplayer.onStartTurn(player);
+        };
 
+        this.commandHub.client.startRound = function (player) {
+            toastr.info("Next round.");
+            self.multiplayer.onStartTurn(player);
+        };
+
+        this.commandHub.client.beginGame = function (players) {
+            self.beginMultiplayer();
+            self.multiplayer.onUpdatePlayers(players);
+        };
+
+        this.commandHub.client.endGame = function (player) {
+            toastr.info(player.name + " wins!");
+            self.endMultiplayer();
+        };
+        
         //init connection
         this.connection.hub.start().done(function () {
-            self.chatHub.server.send("signalR", "started");
+            callback();
         });
+    };
+
+    World.prototype.enterLobby = function () {
+        var self = this;
+
+        this.setupHubs(function () {
+            self.currentState = self.lobby;
+            //self.commandHub.server.joinGame(self.userName, self.userColor);
+            jaws.switchGameState(self.currentState);
+        });
+    };
+
+    World.prototype.beginMultiplayer = function () {
+        var self = this;
+        self.currentState = self.multiplayer;
+        jaws.switchGameState(self.currentState);
+    };
+
+    World.prototype.endMultiplayer = function () {
+        var self = this;
+        self.currentState = self.titlescreen;
+        jaws.switchGameState(self.currentState);
     };
 
     World.prototype.attachEvents = function(){
@@ -141,24 +197,24 @@ Game.World = (function(Game){
         // make sure the game is liquid layout resolution-independent (RESPONSIVE)
         window.addEventListener("resize", function(e){
             self.onResize(e);
-            self.state.onResize(e);
+            self.currentState.onResize(e);
         }, false);
 
         window.addEventListener("mousemove", function(e){
             event = (e) ? e : window.event;  
-            self.state.onMouseMove(event);
+            self.currentState.onMouseMove(event);
             event.preventDefault();
         }, false);
 
         window.addEventListener("mouseup", function (e) {
             event = (e) ? e : window.event;
-            self.state.onMouseUp(event);
+            self.currentState.onMouseUp(event);
             event.preventDefault();
         }, false);
 
         window.addEventListener("touchend", function (e) {
             event = (e) ? e : window.event;
-            self.state.onMouseUp(event);
+            self.currentState.onMouseUp(event);
             event.preventDefault();
         }, false);
 
@@ -166,7 +222,7 @@ Game.World = (function(Game){
             event = (e) ? e : window.event;  
             jaws.mouse_x = event.touches[0].pageX - jaws.canvas.offsetLeft;
             jaws.mouse_y = event.touches[0].pageY - jaws.canvas.offsetTop;
-            self.state.onMouseMove(event);
+            self.currentState.onMouseMove(event);
             event.preventDefault();
         }, false);
 

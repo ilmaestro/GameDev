@@ -3,9 +3,10 @@ Game.Station = (function(Game){
 	function Station(options){
 		options.isAlive = options.isAlive || false;
 		options.color = options.color || "#000";
+		options.playerId = options.playerId || 0;
 
 	    // owner
-		this.playerId = 0;
+		this.playerId = options.playerId;
 
 	    // children stations
 		this.children = [];
@@ -64,7 +65,7 @@ Game.Station = (function(Game){
     	this.currentHealth -= 1;
     	this.setImage(getStationCanvas(this.score, this.health, this.currentHealth, this.color, this.alpha));
     	if(this.currentHealth <= 0) {
-    		this.isAlive = false;
+    	    this.isAlive = false;
     	}
     };
 

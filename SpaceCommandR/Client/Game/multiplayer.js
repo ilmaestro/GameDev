@@ -7,7 +7,7 @@ Game.Multiplayer = (function(Game){
 	*
 	*/
 
-	function Multiplayer (world, viewport, fpsElement){
+	function Multiplayer (world, viewport){
 		this.world = world;
 		this.viewport = viewport;
 
@@ -32,6 +32,7 @@ Game.Multiplayer = (function(Game){
 		// game state
 		this.isLaunching = false;
 		this.isDragging = false;
+		this.canLaunch = false;
 		this.currentStation = 0;
 
 		// constants
@@ -70,10 +71,14 @@ Game.Multiplayer = (function(Game){
 			this.touch.x = this.viewport.x + jaws.mouse_x;
 			this.touch.y = this.viewport.y + jaws.mouse_y;
 
-			//check if touched station
-			doIfCollidePoint(this.stations, this.touch, function(station){
-				station.isLaunching = true;
-				self.isDragging = true;
+		    //check if touched station
+			doIfCollidePoint(this.stations, this.touch, function (station) {
+			    //check station player, allow launch if it belongs to the current player.
+			    var stationPlayer = self.players[station.playerId - 1];
+			    if (stationPlayer.name == self.world.userName) {
+			        station.isLaunching = true;
+			        self.isDragging = true;
+			    }
 			});
 		}
 
@@ -107,11 +112,16 @@ Game.Multiplayer = (function(Game){
 	    });
 	};
 
-	Multiplayer.prototype.onSetStation = function (stationId) {
-	    if (stationId >= this.stations.length) {
-	        stationId = 0;
-	    }
-	    this.currentStation = stationId;
+	Multiplayer.prototype.onStartTurn = function (player) {
+	    this.currentStation = player.lastSelectedStation;
+	    this.currentPlayer = this.players[player.id - 1];
+	    if (this.currentPlayer.name == this.world.userName) {
+	        //it's MY turn, make sure i have controls
+	        toastr.info("Your turn.");
+	    } else {
+	        toastr.info(this.currentPlayer.name + " turn.");
+        }
+	    this.viewport.centerAround(this.stations[this.currentStation]);
 	};
 
 	Multiplayer.prototype.onNewPlayer = function (player) {
@@ -122,6 +132,8 @@ Game.Multiplayer = (function(Game){
 	Multiplayer.prototype.onUpdatePlayers = function (playerList) {
 	    var self = this;
 	    this.players = [];
+	    this.stations = [];
+
 	    playerList.forEach(function (player) {
 	        var p = new Game.Player(player);
 	        self.players.push(p);
@@ -130,7 +142,10 @@ Game.Multiplayer = (function(Game){
 	            self.addNewPlayerStation(p);
 	        }
 	    });
-	    this.currentPlayer = playerList.filter(function (player) { return player.name == self.world.userName; })[0];
+	    if (!this.currentPlayer) {
+	        this.currentPlayer = this.players[0];
+	    }
+	    this.viewport.centerAround(this.stations[this.currentStation]);
 	};
 
 	/*
@@ -140,9 +155,16 @@ Game.Multiplayer = (function(Game){
 	*/
 
 	Multiplayer.prototype.setup = function(){
-		jaws.clear();
-		var self = this;
-
+	    var self = this;
+	    if (this.players.length > 0) {
+            //bypass setup, cuz we're already setup.
+	        return;
+	    }
+		this.stations = [];
+		this.players = [];
+		this.currentPlayer = null;
+		this.planets = [];
+        
 		// set up the chase camera view
         this.viewport = new jaws.Viewport({ max_x: this.world.viewport_max_x, max_y: this.world.viewport_max_y });
         jaws.activeviewport = this.viewport; // resize events need this in global scope
@@ -164,9 +186,10 @@ Game.Multiplayer = (function(Game){
 		});
 
 	    //add stations from player list
-		this.players.forEach(function (player) {
-		    self.addNewPlayerStation(player);
-		});
+		//this.players.forEach(function (player) {
+		//    self.addNewPlayerStation(player);
+		//});
+		//this.currentPlayer = this.players[0];
 
 		//create station 1
 		//this.stations.push(new Game.Station({
@@ -270,20 +293,28 @@ Game.Multiplayer = (function(Game){
 		updateAll(this.planets);
 
 		this.projectileManager.update(this.viewport, this.stations, this.planets, function (collisionType, projectile, collisionObject) {
-		    //update explosion
+		    var parentStation = getStationByName(self.stations, projectile.parentStation);
+
+            //update explosion
 		    self.explosion.beginAnim(projectile.x, projectile.y);
 		    self.world.sfxhit();
 
 		    //check if station
 		    if (collisionType == "station") {
-		        var parentStation = this.getStationByName(projectile.parentStation);
 		        collisionObject.damaged();
 		        parentStation.scored();
+		        if (!collisionObject.isAlive) {
+		            self.players[collisionObject.playerId - 1].destroy();
+		        }
 		    }
-
-		    setTimeout(function () {
+            //check that the current player is this world's user AND that the launching station is that same user.
+		    if (self.currentPlayer.name == self.world.userName && self.currentPlayer.name == self.players[parentStation.playerId - 1].name) {
+		        setTimeout(function () {
+		            self.world.commandHub.server.endTurn(self.world.gameName, self.players, self.currentPlayer);
+		        }, 2000);
+		    } else {
 		        self.viewport.centerAround(self.stations[self.currentStation]);
-		    }, 2000);
+		    }
 		});
 
         this.background.update(this.viewport);
@@ -338,8 +369,10 @@ Game.Multiplayer = (function(Game){
 	        anchor: "center",
 	        isAlive: true,
 	        color: player.color,
-	        name: player.name
+	        name: "S" + this.stations.length,
+            playerId: player.id
 	    }));
+	    player.lastSelectedStation = this.stations.length - 1;
 	}
 
 	Multiplayer.prototype.launchFrom = function (station, toPoint) {
@@ -350,8 +383,7 @@ Game.Multiplayer = (function(Game){
 	    var vx = Math.cos(theta) * velocity,
 	        vy = Math.sin(theta) * velocity;
 
-	    this.world.commandHub.server.launchProjectile(station.name, station.x, station.y, vx, vy);
-	    this.world.commandHub.server.setStation(this.nextStation());
+	    this.world.commandHub.server.launchProjectile(this.world.gameName, station.name, station.x, station.y, vx, vy);
 	};
 
 	Multiplayer.prototype.launchProjectile = function (station, x, y, vx, vy) {}; // placeholder
