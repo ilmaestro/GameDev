@@ -6,6 +6,9 @@
 span {
     font-style: italic
 }
+.directions {
+    font-size: 8pt;
+}
 
 /* game objects */
 .board {
